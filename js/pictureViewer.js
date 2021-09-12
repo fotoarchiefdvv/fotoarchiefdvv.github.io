@@ -90,13 +90,14 @@ function downloadFile(url, extension){
 }
 
 function loadDescription(){
-  var fotoMap = loadJsonMap();
-  var file = getParameterByName("f");
-  var photoData = fotoMap.filter(function(photo) {
-    return photo.Album == file.substring(0, file.lastIndexOf('/'));
-  }).filter(function(fileName){
-    console.log(file.substring(file.lastIndexOf('/')));
-    return fileName.Bestandsnaam == file.substring(file.lastIndexOf('/')+1);
+  loadJsonMap(function (fotoMap) {
+    var file = getParameterByName("f");
+    var photoData = fotoMap.filter(function(photo) {
+      return photo.Album == file.substring(0, file.lastIndexOf('/'));
+    }).filter(function(fileName){
+      console.log(file.substring(file.lastIndexOf('/')));
+      return fileName.Bestandsnaam == file.substring(file.lastIndexOf('/')+1);
+    });
+    $('#description').html(photoData[0].Info.replaceAll('||', '<br />'));
   });
-  $('#description').html(photoData[0].Info.replaceAll('||', '<br />'));
 }

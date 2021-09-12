@@ -24,15 +24,20 @@ function markSavedToday(key){
 }
 
 function getThumbnail(photoPath, callback, param){
-  $.ajax({
-      'global': false,
-      cache: true,
-      'url': '/thumbnails.json',
-      'dataType': "json",
-      'success': function (data) {
-          parseThumbnailData(data, photoPath, callback, param);
-      }
-  });
+  if(typeof window.thumbnails == 'undefined'){
+    $.ajax({
+        'global': false,
+        cache: true,
+        'url': '/thumbnails.json',
+        'dataType': "json",
+        'success': function (data) {
+          window.thumbnails = data;
+            parseThumbnailData(data, photoPath, callback, param);
+        }
+    });
+  }else{
+    parseThumbnailData(window.thumbnails, photoPath, callback, param);
+  }
 }
 
 function parseThumbnailData(data, photoPath, callback, param) {
@@ -50,22 +55,12 @@ function parseThumbnailData(data, photoPath, callback, param) {
 
 function loadJsonMap(callback){
   if(requiresNewRetrieval('map')){
-    $.ajax({
-        'async': false,
-        'global': false,
-        headers : {
-          'Authorization': "Bearer "+getGithubToken(),
-          Accept: "application/vnd.github.v3.raw"
-        },
-        'url': 'https://api.github.com/repos/JValck/lojplmb_fa/contents/map.json',
-        'dataType': "json",
-        'success': function (data) {
-          markSavedToday('map');
-          window.localStorage.setItem('map', JSON.stringify(data));
-          if(typeof callback == 'function'){
-            callback(data);
-          }
-        }
+    loadLargeFile("map.json", function(data){
+      markSavedToday('map');
+      window.localStorage.setItem('map', data);
+      if(typeof callback == 'function'){
+        callback(JSON.parse(data));
+      }
     });
   }else{
     console.log("Map loaded from localStorage");

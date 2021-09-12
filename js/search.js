@@ -1,6 +1,7 @@
 $(document).ready(function() {
   setInterval(displayResults, 3000);
   $('#loadingResults').addClass('d-none');
+  getThumbnail('', function(){}, null);
 });
 var loadedPhotos = [];
 var photosToLoad = 0;
