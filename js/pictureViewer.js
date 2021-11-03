@@ -92,12 +92,19 @@ function downloadFile(url, extension){
 function loadDescription(){
   loadJsonMap(function (fotoMap) {
     var file = getParameterByName("f");
+    var album = file.substring(0, file.lastIndexOf('/'));
+    var fileName = file.substring(file.lastIndexOf('/')+1);
     var photoData = fotoMap.filter(function(photo) {
-      return photo.Album == file.substring(0, file.lastIndexOf('/'));
-    }).filter(function(fileName){
-      console.log(file.substring(file.lastIndexOf('/')));
-      return fileName.Bestandsnaam == file.substring(file.lastIndexOf('/')+1);
+      return photo.Album == album;
+    }).filter(function(fileNameInAlbum){
+      return fileNameInAlbum.Bestandsnaam == fileName;
     });
     $('#description').html(photoData[0].Info.replaceAll('||', '<br />'));
+    loadRequestEditButton(album, fileName);
   });
+}
+
+function loadRequestEditButton(album, fileName) {
+  var link = "https://docs.google.com/forms/d/e/1FAIpQLSeF1Qolc1o_ud1gqCHUbUpS-eYbQgizrHdmvB6GnuA1hFZ3Xg/viewform?usp=pp_url&entry.1519987025="+album+"&entry.399706837="+fileName;
+  $('#requestEditButton').attr('href', link).removeClass('d-none');
 }
