@@ -106,7 +106,8 @@ function loadResults(fotoMap){
         var datum = this.Jaar < 0 ? "Zonder datum":((this.Dag > 0 ? this.Dag+"/":"")+(this.Maand > 0 ? this.Maand+"/":(this.Dag > 0)?"??/":"")+this.Jaar);
         $(partialContent.find('.datum')[0]).text(datum);
 
-        var id = 'preview-'+this.Album.toString().replaceAll('/','_').replaceAll(' ','_')+'_'+this.Bestandsnaam;
+        var id = ('preview-'+this.Album.toString()+'_'+this.Bestandsnaam).replace(/[!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "_");
+
         $(partialContent.find('img')[0]).attr('id', id);
         loadedPhotos.push({
           html: partialContent,
@@ -135,7 +136,7 @@ function displayResults() {
 
     for (var i = 0; i < sortedMap.length; i++) {
       $('#searchResults').append(sortedMap[i].html);
-      var id = 'preview-'+sortedMap[i].data.Album.toString().replaceAll('/','_').replaceAll(' ','_')+'_'+sortedMap[i].data.Bestandsnaam;
+      var id = ('preview-'+sortedMap[i].data.Album.toString()+'_'+sortedMap[i].data.Bestandsnaam).replace(/[!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "_");
       loadThumbnail(sortedMap[i].data.Album+"/"+sortedMap[i].data.Bestandsnaam, id);
     }
     $('#loadingResults').addClass('d-none');
