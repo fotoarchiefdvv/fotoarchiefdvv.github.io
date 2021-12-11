@@ -34,12 +34,14 @@ function search(fotoMap){
   var filtered = [];
 
   if($('#jaartal').is(':visible')){
-    var yearRegex = new RegExp($('#jaartal').val().trim()+'', 'g');
     for (var i = 0; i < fotoMap.length; i++) {
-      var info = getInfo(fotoMap[i]);
-      if(info && typeof info === 'string' && info.search(yearRegex) != -1){
+      var info = getYear(fotoMap[i]);
+      if(info && (parseInt(info) == parseInt($('#jaartal').val()))){
         filtered.push(fotoMap[i])
       }
+      /*if(info && typeof info.year === 'string' && info.search(yearRegex) != -1){
+        filtered.push(fotoMap[i])
+      }*/
     }
     fotoMap = filtered;
   }
@@ -74,6 +76,10 @@ function getInfo(fotoData){
     return fotoData.Info;
   }
   return null;
+}
+
+function getYear(fotoData) {
+  return fotoData.Jaar;
 }
 
 function loadResults(fotoMap){

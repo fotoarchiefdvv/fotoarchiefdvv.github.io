@@ -101,10 +101,18 @@ function loadDescription(){
     });
     $('#description').html(photoData[0].Info.replaceAll('||', '<br />'));
     loadRequestEditButton(album, fileName);
+    loadDownloadButton(fileName);
   });
 }
 
 function loadRequestEditButton(album, fileName) {
   var link = "https://docs.google.com/forms/d/e/1FAIpQLSeF1Qolc1o_ud1gqCHUbUpS-eYbQgizrHdmvB6GnuA1hFZ3Xg/viewform?usp=pp_url&entry.1519987025="+album+"&entry.399706837="+fileName;
   $('#requestEditButton').attr('href', link).removeClass('d-none');
+}
+
+function loadDownloadButton(fileName) {
+  var encodedImage = $($('#preview img')[0]).attr('src');
+  var extension = encodedImage.substring(encodedImage.indexOf('/')+1, encodedImage.indexOf(';'))
+  $('#requestDownloadButton').attr('download', fileName+'.'+extension);
+  $('#requestDownloadButton').attr('href', encodedImage).removeClass('d-none');
 }

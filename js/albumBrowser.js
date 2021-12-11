@@ -25,11 +25,27 @@ function prepareWindowStorage(albums) {
 function loadNextPhoto() {
   currentPhoto++;
   $('#viewer').attr('src', 'pictureViewer.html?f='+activeAlbum.Pictures[currentPhoto].Album+"/"+activeAlbum.Pictures[currentPhoto].Bestandsnaam);
+  updateNavigationButtonsVisibility();
   return  false;
 }
 
 function loadPreviousPhoto() {
   currentPhoto--;
   $('#viewer').attr('src', 'pictureViewer.html?f='+activeAlbum.Pictures[currentPhoto].Album+"/"+activeAlbum.Pictures[currentPhoto].Bestandsnaam);
+  updateNavigationButtonsVisibility();
   return  false;
+}
+
+function updateNavigationButtonsVisibility() {
+  console.log(currentPhoto < activeAlbum.Pictures.length, $('#next').hasClass('invisible'));
+  if(currentPhoto === activeAlbum.Pictures.length - 1 && $('#next').hasClass('visible')){
+    $('#next').removeClass('visible').addClass('invisible');
+  }else if(currentPhoto < activeAlbum.Pictures.length && $('#next').hasClass('invisible')){
+    $('#next').removeClass('invisible').addClass('visible');
+  }
+  if(currentPhoto === 0 && $('#previous').hasClass('visible')){
+    $('#previous').removeClass('visible').addClass('invisible');
+  }else if(currentPhoto != 0 && $('#previous').hasClass('invisible')){
+    $('#previous').removeClass('invisible').addClass('visible');
+  }
 }

@@ -1,4 +1,5 @@
 $(document).ready(function(){
+  loadJsonMap(jsonMapLoaded);//required for descriptions as they are in the iframe
   loadAlbumsMap(displayAlbums);
 });
 
@@ -17,4 +18,8 @@ function displayAlbums(data) {
     $('#albums').append(toInsert);
   }
   $('#loading').remove();
+}
+
+function jsonMapLoaded(data) {
+  console.log("Done preloading json map");
 }
