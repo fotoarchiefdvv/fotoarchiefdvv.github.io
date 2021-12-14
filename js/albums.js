@@ -4,10 +4,10 @@ $(document).ready(function(){
 });
 
 function displayAlbums(data) {
-  var albums = data.map(function(albumInfo) {
+  var albums = data.map(function(albumInfo) {    
     return {
       name: albumInfo.Name,
-      pictureCount: albumInfo.Pictures.length
+      pictureCount: (albumInfo.Pictures.length) ? albumInfo.Pictures.length : 1
     }
   })
   for (var i = 0; i < albums.length; i++) {
