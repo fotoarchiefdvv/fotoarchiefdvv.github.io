@@ -6,6 +6,16 @@ $(document).ready(function() {
 var loadedPhotos = [];
 var photosToLoad = 0;
 
+// observer for visibility of search result card
+var observer = new IntersectionObserver(function(entries) {
+  for (var i = 0; i < entries.length; i++) {
+    if(entries[i]['isIntersecting'] === true) {
+      loadThumbnail($(entries[i].target).data('path'), $(entries[i].target).find('img')[0].id);
+      observer.unobserve(entries[i].target)
+    }
+  }
+}, { threshold: [0.5] });
+
 function toggleNameBox(){
   if($('#naamCheckbox:checked').length > 0){
     $('#naamBox').removeClass('d-none').addClass("d-block");
@@ -39,9 +49,6 @@ function search(fotoMap){
       if(info && (parseInt(info) == parseInt($('#jaartal').val()))){
         filtered.push(fotoMap[i])
       }
-      /*if(info && typeof info.year === 'string' && info.search(yearRegex) != -1){
-        filtered.push(fotoMap[i])
-      }*/
     }
     fotoMap = filtered;
   }
@@ -111,6 +118,7 @@ function loadResults(fotoMap){
 
         var datum = this.Jaar < 0 ? "Zonder datum":((this.Dag > 0 ? this.Dag+"/":"")+(this.Maand > 0 ? this.Maand+"/":(this.Dag > 0)?"??/":"")+this.Jaar);
         $(partialContent.find('.datum')[0]).text(datum);
+        $(partialContent).data('path', this.Album+'/'+this.Bestandsnaam);
 
         var id = ('preview-'+this.Album.toString()+'_'+this.Bestandsnaam).replace(/[!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "_");
 
@@ -141,13 +149,21 @@ function displayResults() {
     });
 
     for (var i = 0; i < sortedMap.length; i++) {
-      $('#searchResults').append(sortedMap[i].html);
       var id = ('preview-'+sortedMap[i].data.Album.toString()+'_'+sortedMap[i].data.Bestandsnaam).replace(/[!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "_");
-      loadThumbnail(sortedMap[i].data.Album+"/"+sortedMap[i].data.Bestandsnaam, id);
+      $('#searchResults').append(sortedMap[i].html);
     }
+    bindInScreenObserver();
     $('#loadingResults').addClass('d-none');
   }
 }
+
+function bindInScreenObserver() {
+  var results = document.querySelectorAll('.resultColumn');
+  for (var i = 0; i < results.length; i++) {
+    observer.observe(results[i]);
+  }
+}
+
 
 function loadThumbnail(filePath, id){
   getThumbnail(filePath, displayThumbnail, id);
